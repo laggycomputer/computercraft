@@ -32,10 +32,10 @@ do
     end
 
     -- todo: don't waste fuel
-    local numPerFurnace = math.min(math.floor(totalToSmelt / numFurnaces), 64)
+    local numPerFurnace = math.floor(totalToSmelt / numFurnaces)
 
     for furnace = 1, numFurnaces do
-        local toDropNow = (furnace == numFurnaces) and numPerFurnace or (numPerFurnace + totalToSmelt % numFurnaces)
+        local toDropNow = math.min((furnace == numFurnaces) and numPerFurnace or (numPerFurnace + totalToSmelt % numFurnaces), 64)
         while toDropNow > 0 and totalToSmelt > 0 do
             local countBefore = turtle.getItemCount()
             doWithContext("push items into furnace", function() return turtle.dropDown(math.min(toDropNow, countBefore)) end)
@@ -52,7 +52,11 @@ do
     end
 end
 
-::gohome::
+if not isInventoryEmpty() then
+    naiveMove(suckItemsAt)
+    dump(suckItemsFacing)
+end
+
 io.write("returning to home base at " .. startAt:tostring() .. "\n")
 
 naiveMove(startAt)
