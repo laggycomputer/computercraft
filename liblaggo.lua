@@ -207,3 +207,16 @@ function isInventoryEmpty()
     end
     return true
 end
+
+function selectOffset(off)
+    local next = turtle.getSelectedSlot() + off
+    while next > 16 do
+        next = next - 16
+    end
+
+    while next < 1 do
+        next = next + 16
+    end
+
+    turtle.select(next)
+end

@@ -40,7 +40,7 @@ do
             doWithContext("push items into furnace", function() return turtle.dropDown(math.min(toDropNow, countBefore)) end)
             local dropped = countBefore - turtle.getItemCount()
             if turtle.getItemCount() == 0 then
-                turtle.select((turtle.getSelectedSlot() + 1) % NUM_SLOTS)
+                selectOffset(1)
             end
 
             toDropNow = toDropNow - dropped
