@@ -44,7 +44,7 @@ do
             end
 
             toDropNow = toDropNow - dropped
-            io.write("dropping more")
+            io.write("dropping more\n")
         end
         step(CARDINALS[furnacesDirection])
     end
