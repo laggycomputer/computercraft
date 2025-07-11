@@ -158,7 +158,7 @@ function naiveMove(vec_to)
     end
 end
 
-function refuel(toLevel)
+function refuel(direction, toLevel)
     local toLevel = toLevel or turtle.getFuelLimit()
 
     -- assume charcoal
@@ -174,7 +174,7 @@ function refuel(toLevel)
                 return ok, err
             end
 
-            ok, err = turtle.suckUp(1);
+            ok, err = doAnyDir("suck", direction);
             if not ok then
                 return ok, err
             end
