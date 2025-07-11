@@ -62,19 +62,16 @@ function face(facingTo)
 end
 
 function doAnyDir(fnName, direction, ...)
-    local fn
-    if not direction then
-        fn = turtle[fnName]
-    elseif direction == "down" then
+    local fn = turtle[fnName]
+    if direction == "down" then
         fn = turtle[fnName .. "Up"]
     elseif direction == "up" then
         fn = turtle[fnName .. "Down"]
     else
-        assert(false, "doAnyDir invalid direction")
+        face(direction)
+        return fn(...)
     end
 
-    face(direction)
-    return fn(...)
 end
 
 function step(vec_offset)
