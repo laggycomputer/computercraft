@@ -16,7 +16,7 @@ function initPathing(start_at, start_facing)
     facing = start_facing
 end
 
-cardinals = {
+CARDINALS = {
     east = vector.new(1, 0, 0),
     south = vector.new(0, 0, 1),
     west = vector.new(-1, 0, 0),
@@ -25,40 +25,62 @@ cardinals = {
     down = vector.new(0, -1, 0),
 }
 
-facingNextRight = {
+FACE_RIGHT = {
     east = "south",
     south = "west",
     west = "north",
     north = "east",
 }
 
-facingNextLeft = {
+FACE_LEFT = {
     east = "north",
     north = "west",
     west = "south",
     south = "east",
 }
 
-function face (facing_to)
-    if facing == facing_to then
+NUM_SLOTS = 16
+
+function face(facingTo)
+    if facing == "up" or facing == "down" then
         return
     end
 
-    if facingNextRight[facing] == facing_to then
-        turtle.turnRight()
-        facing = facingNextRight[facing]
+    if facing == facingTo then
+        return
     end
 
-    while facing ~= facing_to do
+    if FACE_RIGHT[facing] == facingTo then
+        turtle.turnRight()
+        facing = FACE_RIGHT[facing]
+    end
+
+    while facing ~= facingTo do
         turtle.turnLeft()
-        facing = facingNextLeft[facing]
+        facing = FACE_LEFT[facing]
     end
 end
 
-function step (vec_offset)
+function doAnyDir(fnName, direction, ...)
+    local fn
+    if not direction then
+        fn = turtle[fnName]
+    elseif direction == "down" then
+        fn = turtle[fnName .. "Up"]
+    elseif direction == "up" then
+        fn = turtle[fnName .. "Down"]
+    else
+        assert(false, "doAnyDir invalid direction")
+    end
+
+    face(direction)
+    return fn(...)
+end
+
+function step(vec_offset)
     local ok, err
 
-    if vec_offset:equals(cardinals["up"]) then
+    if vec_offset:equals(CARDINALS["up"]) then
         ok, err = turtle.up()
         if ok then
             standing = standing:add(vec_offset)
@@ -67,7 +89,7 @@ function step (vec_offset)
         return ok, err
     end
 
-    if vec_offset:equals(cardinals["down"]) then
+    if vec_offset:equals(CARDINALS["down"]) then
         ok, err = turtle.down()
         if ok then
             standing = standing:add(vec_offset)
@@ -77,7 +99,7 @@ function step (vec_offset)
     end
 
 
-    if cardinals[facing]:equals(vec_offset) then
+    if CARDINALS[facing]:equals(vec_offset) then
         ok, err = turtle.forward()
         if ok then
             standing = standing:add(vec_offset)
@@ -86,7 +108,7 @@ function step (vec_offset)
         return ok, err
     end
 
-    if cardinals[facing]:unm():equals(vec_offset) then
+    if CARDINALS[facing]:unm():equals(vec_offset) then
         ok, err = turtle.back()
         if ok then
             standing = standing:add(vec_offset)
@@ -96,7 +118,7 @@ function step (vec_offset)
     end
 
 
-    for f, v in pairs(cardinals) do
+    for f, v in pairs(CARDINALS) do
         if v:equals(vec_offset) then
             face(f)
         end
@@ -110,7 +132,7 @@ function step (vec_offset)
     return ok, err
 end
 
-function naiveMove (vec_to)
+function naiveMove(vec_to)
     while standing.y < vec_to.y do
         doWithContext("naive move up", function() return turtle.up() end)
     end
@@ -120,18 +142,71 @@ function naiveMove (vec_to)
     end
 
     while standing.x < vec_to.x do
-        doWithContext("naive step east", function() return step(cardinals["east"]) end)
+        doWithContext("naive step east", function() return step(CARDINALS["east"]) end)
     end
 
     while standing.x > vec_to.x do
-        doWithContext("naive step west", function() return step(cardinals["west"]) end)
+        doWithContext("naive step west", function() return step(CARDINALS["west"]) end)
     end
 
     while standing.z < vec_to.z do
-        doWithContext("naive step south", function() return step(cardinals["south"]) end)
+        doWithContext("naive step south", function() return step(CARDINALS["south"]) end)
     end
 
     while standing.z > vec_to.z do
-        doWithContext("naive step north", function() return step(cardinals["north"]) end)
+        doWithContext("naive step north", function() return step(CARDINALS["north"]) end)
     end
+end
+
+function refuel(toLevel)
+    local toLevel = toLevel or turtle.getFuelLimit()
+
+    -- assume charcoal
+    local fuelValue = 80
+
+    while toLevel - turtle.getFuelLevel() >= fuelValue do
+        local oldLevel = turtle.getFuelLevel()
+
+        doWithContext("refuel", function()
+            local ok, err
+            ok, err = turtle.select(1);
+            if not ok then
+                return ok, err
+            end
+
+            ok, err = turtle.suckUp(1);
+            if not ok then
+                return ok, err
+            end
+
+            ok, err = turtle.refuel(1);
+            if not ok then
+                return ok, err
+            end
+
+            return true, nil
+        end)
+
+        fuelValue = turtle.getFuelLevel() - oldLevel
+    end
+
+    return fuelValue
+end
+
+function dump(direction)
+    for slot = 1, NUM_SLOTS do
+        if turtle.getItemCount(slot) > 0 then
+            turtle.select(slot)
+            doWithContext("drop from slot " .. slot, turtle.drop)
+        end
+    end
+end
+
+function isInventoryEmpty()
+    for slot = 1, NUM_SLOTS do
+        if turtle.getItemCount(slot) > 0 then
+            return false
+        end
+    end
+    return true
 end
