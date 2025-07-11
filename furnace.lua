@@ -34,18 +34,19 @@ do
     local numPerFurnace = math.floor(itemsTaken / numFurnaces)
 
     for furnace = 1, numFurnaces do
-        step(CARDINALS[furnacesDirection])
         local toDropNow = (furnace == numFurnaces) and numPerFurnace or (numPerFurnace + itemsTaken % numFurnaces)
         while toDropNow > 0 do
             local countBefore = turtle.getItemCount()
-            turtle.dropDown(math.min(toDropNow, countBefore))
-            local dropped = turtle.getItemCount() - countBefore
+            doWithContext("push items into furnace", function() return turtle.dropDown(math.min(toDropNow, countBefore)) end)
+            local dropped = countBefore - turtle.getItemCount()
             if turtle.getItemCount() == 0 then
                 turtle.select((turtle.getSelectedSlot() + 1) % NUM_SLOTS)
             end
 
             toDropNow = toDropNow - dropped
+            io.write("dropping more")
         end
+        step(CARDINALS[furnacesDirection])
     end
 end
 

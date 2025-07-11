@@ -1,14 +1,14 @@
 function doWithContext(context, fn)
     local ok, err = false, nil
 
-    for _ = 1, 5 do
+    for _ = 1, 1 do
         ok, err = fn()
         if ok then
             return ok, err
         end
     end
 
-    io.write("5 unsuccessful attempts to " .. context .. " (latest error: " .. err .. ")")
+    io.write("failed to " .. context .. " (latest error: " .. err .. ")")
 end
 
 function initPathing(start_at, start_facing)
