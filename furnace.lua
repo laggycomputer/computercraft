@@ -46,7 +46,6 @@ do
 
             toDropNow = toDropNow - dropped
             totalToSmelt = totalToSmelt - dropped
-            io.write("dropping more\n")
         end
         step(CARDINALS[furnacesDirection])
     end
