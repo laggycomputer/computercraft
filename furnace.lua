@@ -38,12 +38,13 @@ do
         local toDropNow = (furnace == numFurnaces) and numPerFurnace or (numPerFurnace + itemsTaken % numFurnaces)
         while toDropNow > 0 do
             local countBefore = turtle.getItemCount()
-            turtle.dropDown(math.min(toDropNow, turtle.getItemCount()))
+            turtle.dropDown(math.min(toDropNow, countBefore))
+            local dropped = turtle.getItemCount() - countBefore
             if turtle.getItemCount() == 0 then
                 turtle.select((turtle.getSelectedSlot() + 1) % NUM_SLOTS)
             end
 
-            toDropNow = toDropNow - (countBefore - turtle.getItemCount())
+            toDropNow = toDropNow - dropped
         end
     end
 end
