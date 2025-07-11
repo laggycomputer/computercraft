@@ -19,23 +19,23 @@ refuel(suckItemsFacing)
 
 naiveMove(suckItemsAt)
 do
-    local itemsTaken = 0
+    local totalToSmelt = 0
     for slot = 1, NUM_SLOTS do
         turtle.select(slot)
         doAnyDir("suck", suckItemsFacing)
-        itemsTaken = itemsTaken + turtle.getItemCount(slot)
+        totalToSmelt = totalToSmelt + turtle.getItemCount(slot)
     end
 
-    if itemsTaken == 0 then
+    if totalToSmelt == 0 then
         io.write("nothing to do\n")
         assert(false)
     end
 
-    local numPerFurnace = math.floor(itemsTaken / numFurnaces)
+    local numPerFurnace = math.max(math.min(math.floor(totalToSmelt / numFurnaces), 8), 64)
 
     for furnace = 1, numFurnaces do
-        local toDropNow = (furnace == numFurnaces) and numPerFurnace or (numPerFurnace + itemsTaken % numFurnaces)
-        while toDropNow > 0 do
+        local toDropNow = (furnace == numFurnaces) and numPerFurnace or (numPerFurnace + totalToSmelt % numFurnaces)
+        while toDropNow > 0 and totalToSmelt > 0 do
             local countBefore = turtle.getItemCount()
             doWithContext("push items into furnace", function() return turtle.dropDown(math.min(toDropNow, countBefore)) end)
             local dropped = countBefore - turtle.getItemCount()
@@ -44,6 +44,7 @@ do
             end
 
             toDropNow = toDropNow - dropped
+            totalToSmelt = totalToSmelt - dropped
             io.write("dropping more\n")
         end
         step(CARDINALS[furnacesDirection])
