@@ -31,7 +31,8 @@ do
         assert(false)
     end
 
-    local numPerFurnace = math.max(math.min(math.floor(totalToSmelt / numFurnaces), 8), 64)
+    -- todo: don't waste fuel
+    local numPerFurnace = math.min(math.floor(totalToSmelt / numFurnaces), 64)
 
     for furnace = 1, numFurnaces do
         local toDropNow = (furnace == numFurnaces) and numPerFurnace or (numPerFurnace + totalToSmelt % numFurnaces)
