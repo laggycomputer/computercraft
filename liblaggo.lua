@@ -191,7 +191,7 @@ function refuel(direction, toLevel, fuelValue, pushBuckets)
 
             local detail = turtle.getItemDetail()
             if detail and detail.name == "minecraft:bucket" then
-                doWithContext("return refueling bucket", doAnyDir("drop", pushBuckets or direction))
+                doWithContext("return refueling bucket", function() return doAnyDir("drop", pushBuckets or direction) end)
             end
 
             return true, nil
