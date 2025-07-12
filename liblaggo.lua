@@ -179,7 +179,7 @@ function refuel(direction, toLevel)
                 return ok, err
             end
 
-            ok, err = doAnyDir("suck", direction);
+            ok, err = doAnyDir("suck", direction, 1);
             if not ok then
                 return ok, err
             end
