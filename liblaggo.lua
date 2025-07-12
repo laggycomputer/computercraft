@@ -163,11 +163,11 @@ function getFacing()
     return facing
 end
 
-function refuel(direction, toLevel)
+function refuel(direction, toLevel, fuelValue)
     local toLevel = toLevel or turtle.getFuelLimit()
 
     -- assume charcoal
-    local fuelValue = 80
+    local fuelValue = fuelValue or 80
 
     while toLevel - turtle.getFuelLevel() >= fuelValue do
         local oldLevel = turtle.getFuelLevel()
