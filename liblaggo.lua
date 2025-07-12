@@ -233,3 +233,16 @@ function selectOffset(off)
 
     turtle.select(next)
 end
+
+function networkTrigger(protocol, hostname, cb)
+    peripheral.find("modem", rednet.open)
+    rednet.host(protocol, hostname)
+
+    while true do
+        local event, sender, message, protocol_got = os.pullEvent("rednet_message")
+
+        if protocol == protocol_got then
+            cb()
+        end
+    end
+end
