@@ -39,37 +39,74 @@ initPathing(startAt, startFacing)
 refuel(pushBucketsFacing, nil, 100 * 10, takeBucketsFacing)
 
 naiveMove(takeBucketsAt)
-for slot = 1, NUM_SLOTS do
-    turtle.select(slot)
+
+turtle.select(1)
+while true do
     local detail = turtle.getItemDetail()
     if detail then
         assert(detail.name == "minecraft:bucket", detail.name .. " is not a bucket, take this out of my inventory :(")
-        doWithContext("remove excess bucket(s)", function() return doAnyDir("drop", takeBucketsFacing, detail.count - 1) end)
+        doWithContext("remove excess bucket(s)",
+            function() return doAnyDir("drop", takeBucketsFacing, detail.count - 1) end)
+
+        -- can proceed without taking another bucket
+        selectOffset(1)
+        if turtle.getSelectedSlot() == 1 then
+            break
+        end
     else
         doAnyDir("suck", takeBucketsFacing, 1)
-        detail = turtle.getItemDetail()
-        assert(detail, "should have sucked a bucket")
-        assert(detail.name == "minecraft:bucket", "sucked " .. detail.name .. ", which is not a bucket")
-        assert(detail.count == 1, "didn't pull 1, pulled " .. detail.count)
-    end
-end
+        if detail then
+            assert(detail.name == "minecraft:bucket", "sucked " .. detail.name .. ", which is not a bucket")
+            assert(detail.count == 1, "didn't pull 1, pulled " .. detail.count)
 
-turtle.select(1)
-
-for _, direction in pairs(moves) do
-    step(CARDINALS[direction])
-
-    local ok, data = turtle.inspectUp()
-
-    if ok then
-        if data.name == "minecraft:lava_cauldron" then
-            doWithContext("take lava at " .. getStanding():tostring(), function() return turtle.placeUp() end)
+            -- pulled a bucket, move on
             selectOffset(1)
+            if turtle.getSelectedSlot() == 1 then
+                break
+            end
+        else
+            -- no more buckets to pull
+            break
         end
     end
 end
 
+turtle.select(1)
+for _, direction in pairs(moves) do
+    step(CARDINALS[direction])
+
+    local detail = turtle.getItemDetail()
+    if not detail then
+        -- no bucket
+        goto nextStep
+    end
+
+    do
+        local ok, data = turtle.inspectUp()
+
+        if ok then
+            if data.name == "minecraft:lava_cauldron" then
+                doWithContext("take lava at " .. getStanding():tostring(), function() return turtle.placeUp() end)
+                selectOffset(1)
+            end
+        end
+    end
+
+    ::nextStep::
+end
+
 -- push full buckets out
+naiveMove(pushBucketsAt)
+for slot = 1, NUM_SLOTS do
+    local detail = turtle.getItemDetail(slot)
+    if detail then
+        if detail.name == "minecraft:lava_bucket" then
+            turtle.select(slot)
+            doWithContext("push out full buckets", function() return doAnyDir("push", pushBucketsFacing) end)
+        end
+        -- empty buckets can stay
+    end
+end
 
 io.write("returning to home base at " .. startAt:tostring() .. "\n")
 
