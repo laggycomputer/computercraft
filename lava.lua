@@ -14,6 +14,7 @@ local moves = {
     "east",
     "south",
     "south",
+    "south",
     "west",
     "west",
     "west",
