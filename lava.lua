@@ -103,7 +103,7 @@ for slot = 1, NUM_SLOTS do
     if detail then
         if detail.name == "minecraft:lava_bucket" then
             turtle.select(slot)
-            doWithContext("push out full buckets", function() return doAnyDir("push", pushBucketsFacing) end)
+            doWithContext("push out full buckets", function() return doAnyDir("drop", pushBucketsFacing) end)
         end
         -- empty buckets can stay
     end
