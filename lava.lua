@@ -1,11 +1,11 @@
 local startAt = vector.new(-168, 99, -21)
 local startFacing = "east"
 
-local refuelAt = startAt
-local refuelFacing = "up"
-
 local takeBucketsAt = startAt
 local takeBucketsFacing = "north"
+
+local pushBucketsAt = startAt
+local pushBucketsFacing = "west"
 
 local moves = {
     "south",
@@ -32,9 +32,10 @@ local moves = {
 require "liblaggo"
 
 initPathing(startAt, startFacing)
+-- assume we take lava from here too to refuel
 
-naiveMove(refuelAt)
-refuel(refuelFacing)
+-- steal lava from output, push buckets back to input
+refuel(pushBucketsFacing, nil, 100 * 10, takeBucketsFacing)
 
 naiveMove(takeBucketsAt)
 for slot = 1, NUM_SLOTS do
@@ -64,6 +65,8 @@ for _, direction in pairs(moves) do
         end
     end
 end
+
+-- push full buckets out
 
 io.write("returning to home base at " .. startAt:tostring() .. "\n")
 
