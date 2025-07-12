@@ -244,6 +244,7 @@ function networkTrigger(protocol, hostname, cb)
         local event, sender, message, protocol_got = os.pullEvent("rednet_message")
 
         if protocol == protocol_got then
+            rednet.send(sender, "ack", protocol)
             cb()
         end
     end
