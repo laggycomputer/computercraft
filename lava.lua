@@ -1,4 +1,4 @@
-local startAt = vector.new(-168, 99, -21)
+local startAt = vector.new(-168, 99, -20)
 local startFacing = "east"
 
 local takeBucketsAt = startAt
@@ -8,7 +8,6 @@ local pushBucketsAt = startAt
 local pushBucketsFacing = "west"
 
 local moves = {
-    "south",
     "east",
     "east",
     "east",
@@ -24,7 +23,6 @@ local moves = {
     "north",
     "west",
     "west",
-    "north",
     "north",
 }
 
