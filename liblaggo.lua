@@ -64,14 +64,13 @@ end
 function doAnyDir(fnName, direction, ...)
     local fn = turtle[fnName]
     if direction == "down" then
-        fn = turtle[fnName .. "Up"]
-    elseif direction == "up" then
         fn = turtle[fnName .. "Down"]
+    elseif direction == "up" then
+        fn = turtle[fnName .. "Up"]
     else
         face(direction)
         return fn(...)
     end
-
 end
 
 function step(vec_offset)
@@ -153,6 +152,14 @@ function naiveMove(vec_to)
     while standing.z > vec_to.z do
         doWithContext("naive step north", function() return step(CARDINALS["north"]) end)
     end
+end
+
+function getStanding()
+    return vector.new(standing.x, standing.y, standing.z)
+end
+
+function getFacing()
+    return facing
 end
 
 function refuel(direction, toLevel)
