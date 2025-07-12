@@ -163,7 +163,7 @@ function getFacing()
     return facing
 end
 
-function refuel(direction, toLevel, fuelValue)
+function refuel(direction, toLevel, fuelValue, pushBuckets)
     local toLevel = toLevel or turtle.getFuelLimit()
 
     -- assume charcoal
@@ -191,7 +191,7 @@ function refuel(direction, toLevel, fuelValue)
 
             local detail = turtle.getItemDetail()
             if detail and detail.name == "minecraft:bucket" then
-                doWithContext("return refueling bucket", doAnyDir("drop", direction))
+                doWithContext("return refueling bucket", doAnyDir("drop", pushBuckets or direction))
             end
 
             return true, nil
