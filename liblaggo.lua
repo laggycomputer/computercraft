@@ -238,6 +238,8 @@ function networkTrigger(protocol, hostname, cb)
     peripheral.find("modem", rednet.open)
     rednet.host(protocol, hostname)
 
+    io.write("listening as " .. hostname .. " on protocol " .. protocol .. "\n")
+
     while true do
         local event, sender, message, protocol_got = os.pullEvent("rednet_message")
 
