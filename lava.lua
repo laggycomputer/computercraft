@@ -72,8 +72,6 @@ end
 
 turtle.select(1)
 for _, direction in pairs(moves) do
-    step(CARDINALS[direction])
-
     local detail = turtle.getItemDetail()
     if not detail then
         -- no bucket
@@ -91,6 +89,7 @@ for _, direction in pairs(moves) do
         end
     end
 
+    step(CARDINALS[direction])
     ::nextStep::
 end
 
