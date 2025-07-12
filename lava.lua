@@ -46,7 +46,7 @@ while true do
     if detail then
         assert(detail.name == "minecraft:bucket", detail.name .. " is not a bucket, take this out of my inventory :(")
         doWithContext("remove excess bucket(s)",
-            function() return doAnyDir("drop", takeBucketsFacing, detail.count - 1) end)
+        function() return doAnyDir("drop", takeBucketsFacing, detail.count - 1) end)
 
         -- can proceed without taking another bucket
         selectOffset(1)
@@ -55,6 +55,7 @@ while true do
         end
     else
         doAnyDir("suck", takeBucketsFacing, 1)
+        local detail = turtle.getItemDetail()
         if detail then
             assert(detail.name == "minecraft:bucket", "sucked " .. detail.name .. ", which is not a bucket")
             assert(detail.count == 1, "didn't pull 1, pulled " .. detail.count)
