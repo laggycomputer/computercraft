@@ -30,11 +30,10 @@ local moves = {
 
 require "liblaggo"
 
+-- assume we take lava from here too to refuel
 initPathing(startAt, startFacing)
 
 networkTrigger("lava", "lava", function()
-    -- assume we take lava from here too to refuel
-
     -- steal lava from output, push buckets back to input
     refuel(pushBucketsFacing, nil, 100 * 10, takeBucketsFacing)
 
