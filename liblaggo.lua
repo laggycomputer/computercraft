@@ -69,8 +69,9 @@ function doAnyDir(fnName, direction, ...)
         fn = turtle[fnName .. "Up"]
     else
         face(direction)
-        return fn(...)
     end
+
+    return fn(...)
 end
 
 function step(vec_offset)
