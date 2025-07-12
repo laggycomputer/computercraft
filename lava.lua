@@ -46,6 +46,7 @@ for slot = 1, NUM_SLOTS do
         doWithContext("remove excess bucket(s)", function() return doAnyDir("drop", takeBucketsFacing, detail.count - 1) end)
     else
         doAnyDir("suck", takeBucketsFacing, 1)
+        detail = turtle.getItemDetail()
         assert(detail.name == "minecraft:bucket", "sucked " .. detail.name .. ", which is not a bucket")
         assert(detail.count == 1, "didn't pull 1, pulled " .. detail.count)
     end
