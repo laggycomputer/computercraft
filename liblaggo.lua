@@ -343,10 +343,12 @@ function liblaggo.headlessApp()
 
     app.on("reload", function(req, res)
         fs.delete("/computercraft")
-        fs.delete("/startup")
         os.run({}, "/clone", "https://github.com/laggycomputer/computercraft")
         local program = os.getComputerLabel()
-        fs.copy("/computercraft/" .. program, "/startup")
+
+        local fp = fs.open("/startup", "w+")
+        fp.write('runfile("/computercraft/' .. program .. '")')
+
         res.send("ok, restarting")
         os.reboot()
     end)
