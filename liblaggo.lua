@@ -1,6 +1,4 @@
-if liblaggo then return end
-
-liblaggo = {}
+local liblaggo = {}
 
 function liblaggo.doWithContext(context, fn)
     local ok, err = false, nil
@@ -355,3 +353,5 @@ function liblaggo.headlessApp()
 
     return app
 end
+
+return liblaggo

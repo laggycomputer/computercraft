@@ -11,10 +11,9 @@ local furnacesDirection = "west"
 
 ----------------------
 
-require "liblaggo"
+local liblaggo = require("liblaggo")
 
 liblaggo.initPathing(startAt, startFacing)
-
 liblaggo.refuel(suckItemsFacing)
 
 liblaggo.naiveMove(suckItemsAt)

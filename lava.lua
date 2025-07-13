@@ -28,7 +28,7 @@ local moves = {
 
 ----------------------
 
-require "liblaggo"
+local liblaggo = require("liblaggo")
 
 -- assume we take lava from here too to refuel
 liblaggo.initPathing(startAt, startFacing)

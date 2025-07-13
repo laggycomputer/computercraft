@@ -1,4 +1,4 @@
-require "liblaggo"
+local liblaggo = require("liblaggo")
 
 local corners = {
     vector.new(-188, 78, 34),
