@@ -11,7 +11,7 @@ assert(recipient, "no host found")
 
 assert(rednet.send(recipient, {
     route = route,
-    params = textutils.unserializeJSON(payload),
+    body = textutils.unserializeJSON(payload),
 }, protocol), "message not sent")
 
 local sender, msg, protocol = rednet.receive(protocol, 10)

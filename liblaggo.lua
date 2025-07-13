@@ -295,7 +295,7 @@ function liblaggo.selectOffset(off)
     turtle.select(next)
 end
 
--- requests have {route, params}
+-- requests have {route, body}
 
 function liblaggo.networkApp()
     local routes = {}
@@ -325,9 +325,9 @@ function liblaggo.networkApp()
             if protocol == protocolGot then
                 local req = {
                     sender = sender,
-                    params = message.params,
+                    body = message.body,
                     json = function()
-                        return textutils.unserializeJSON(message.params)
+                        return textutils.unserializeJSON(message.body)
                     end,
                     app = ret,
                 }
