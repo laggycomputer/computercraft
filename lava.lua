@@ -5,7 +5,7 @@ local takeBucketsAt = startAt
 local takeBucketsFacing = "north"
 
 local pushBucketsAt = startAt
-local pushBucketsFacing = "west"
+local pushBucketsFacing = "down"
 
 local moves = {
     "east",
