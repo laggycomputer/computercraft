@@ -78,41 +78,41 @@ function liblaggo.doAnyDir(fnName, direction, ...)
     return fn(...)
 end
 
-function liblaggo.step(vec_offset)
+function liblaggo.step(vecOffset)
     local ok, err
 
-    if vec_offset:equals(liblaggo.CARDINALS["up"]) then
+    if vecOffset:equals(liblaggo.CARDINALS["up"]) then
         ok, err = turtle.up()
         if ok then
-            liblaggo.standing = liblaggo.standing:add(vec_offset)
+            liblaggo.standing = liblaggo.standing:add(vecOffset)
         end
 
         return ok, err
     end
 
-    if vec_offset:equals(liblaggo.CARDINALS["down"]) then
+    if vecOffset:equals(liblaggo.CARDINALS["down"]) then
         ok, err = turtle.down()
         if ok then
-            liblaggo.standing = liblaggo.standing:add(vec_offset)
+            liblaggo.standing = liblaggo.standing:add(vecOffset)
         end
 
         return ok, err
     end
 
 
-    if liblaggo.CARDINALS[liblaggo.facing]:equals(vec_offset) then
+    if liblaggo.CARDINALS[liblaggo.facing]:equals(vecOffset) then
         ok, err = turtle.forward()
         if ok then
-            liblaggo.standing = liblaggo.standing:add(vec_offset)
+            liblaggo.standing = liblaggo.standing:add(vecOffset)
         end
 
         return ok, err
     end
 
-    if liblaggo.CARDINALS[liblaggo.facing]:unm():equals(vec_offset) then
+    if liblaggo.CARDINALS[liblaggo.facing]:unm():equals(vecOffset) then
         ok, err = turtle.back()
         if ok then
-            liblaggo.standing = liblaggo.standing:add(vec_offset)
+            liblaggo.standing = liblaggo.standing:add(vecOffset)
         end
 
         return ok, err
@@ -120,41 +120,41 @@ function liblaggo.step(vec_offset)
 
 
     for f, v in pairs(liblaggo.CARDINALS) do
-        if v:equals(vec_offset) then
+        if v:equals(vecOffset) then
             liblaggo.face(f)
         end
     end
 
     ok, err = turtle.forward()
     if ok then
-        liblaggo.standing = liblaggo.standing:add(vec_offset)
+        liblaggo.standing = liblaggo.standing:add(vecOffset)
     end
 
     return ok, err
 end
 
-function liblaggo.naiveMove(vec_to)
-    while liblaggo.standing.y < vec_to.y do
+function liblaggo.naiveMove(vecTo)
+    while liblaggo.standing.y < vecTo.y do
         liblaggo.doWithContext("naive move up", function() return turtle.up() end)
     end
 
-    while liblaggo.standing.y > vec_to.y do
+    while liblaggo.standing.y > vecTo.y do
         liblaggo.doWithContext("naive move down", function() return turtle.down() end)
     end
 
-    while liblaggo.standing.x < vec_to.x do
+    while liblaggo.standing.x < vecTo.x do
         liblaggo.doWithContext("naive step east", function() return liblaggo.step(liblaggo.CARDINALS["east"]) end)
     end
 
-    while liblaggo.standing.x > vec_to.x do
+    while liblaggo.standing.x > vecTo.x do
         liblaggo.doWithContext("naive step west", function() return liblaggo.step(liblaggo.CARDINALS["west"]) end)
     end
 
-    while liblaggo.standing.z < vec_to.z do
+    while liblaggo.standing.z < vecTo.z do
         liblaggo.doWithContext("naive step south", function() return liblaggo.step(liblaggo.CARDINALS["south"]) end)
     end
 
-    while liblaggo.standing.z > vec_to.z do
+    while liblaggo.standing.z > vecTo.z do
         liblaggo.doWithContext("naive step north", function() return liblaggo.step(liblaggo.CARDINALS["north"]) end)
     end
 end
