@@ -220,8 +220,6 @@ function liblaggo.bruteMove(vecTo)
             end
             displacement = vecTo - liblaggo.standing
         end
-
-        displacement = vecTo - liblaggo.standing
     end
 
     return true
