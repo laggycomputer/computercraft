@@ -15,7 +15,7 @@ local dumpOutputsDirection = "north"
 ----------------------
 
 liblaggo.initPathing(nil, startFacing)
-liblaggo.doWithContext(liblaggo.bruteMove(startAt), "move to intended start position")
+liblaggo.doWithContext(function() return liblaggo.bruteMove(startAt) end, "move to intended start position")
 
 local stems = {
     "minecraft:pumpkin_stem",
