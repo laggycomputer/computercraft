@@ -24,7 +24,7 @@ end
 
 function liblaggo.initPathing(startLocation, startFacing)
     liblaggo.standing = startLocation and vector.new(startLocation.x, startLocation.y, startLocation.z) or
-    liblaggo.gpsAsVector()
+        liblaggo.gpsAsVector()
     assert(liblaggo.standing, "cannot determine location and none passed!")
     liblaggo.facing = startFacing
 end
@@ -196,14 +196,26 @@ function liblaggo.bruteMove(vecTo)
 
         while canMove.x do
             canMove.x, lastFail = liblaggo.step(vector.new(liblaggo.sgn(displacement.x), 0, 0))
+            if canMove.x then
+                canMove.y = true
+                canMove.z = true
+            end
         end
 
         while canMove.y do
             canMove.y, lastFail = liblaggo.step(vector.new(0, liblaggo.sgn(displacement.y), 0))
+            if canMove.y then
+                canMove.x = true
+                canMove.z = true
+            end
         end
 
         while canMove.z do
             canMove.z, lastFail = liblaggo.step(vector.new(0, 0, liblaggo.sgn(displacement.z)))
+            if canMove.z then
+                canMove.x = true
+                canMove.y = true
+            end
         end
 
         displacement = vecTo - liblaggo.standing
