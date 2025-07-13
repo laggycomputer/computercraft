@@ -205,7 +205,7 @@ function liblaggo.bruteMove(vecTo)
             canMove.z, lastFail = liblaggo.step(vector.new(0, 0, liblaggo.sgn(displacement.z)))
         end
 
-        displacement = (vecTo - liblaggo.standing):length()
+        displacement = vecTo - liblaggo.standing
     end
 
     return true
