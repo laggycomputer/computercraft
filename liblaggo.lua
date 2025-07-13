@@ -13,9 +13,18 @@ function liblaggo.doWithContext(context, fn)
     io.write("failed to " .. context .. " (latest error: " .. err .. ")")
 end
 
+function liblaggo.gpsAsVector()
+    local x, y, z = gps.locate()
+    if x then
+        return vector:new(x, y, z)
+    else
+        return nil
+    end
+end
+
 function liblaggo.initPathing(startLocation, startFacing)
     liblaggo.standing = startLocation and vector.new(startLocation.x, startLocation.y, startLocation.z) or
-    assert(gps.locate(), "cannot determine location and none passed!")
+    assert(liblaggo.gpsAsVector(), "cannot determine location and none passed!")
     liblaggo.facing = startFacing
 end
 
