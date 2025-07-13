@@ -20,6 +20,9 @@ peripheral.find("modem", rednet.open)
 local recipient = rednet.lookup(protocol, host)
 assert(recipient, "no host found")
 
+local payload = textutils.unserializeJSON(payload)
+assert(payload, "could not parse")
+
 assert(rednet.send(recipient, {
     route = route,
     body = textutils.unserializeJSON(payload),
