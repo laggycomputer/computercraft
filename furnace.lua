@@ -13,16 +13,16 @@ local furnacesDirection = "west"
 
 require "liblaggo"
 
-initPathing(startAt, startFacing)
+liblaggo.initPathing(startAt, startFacing)
 
-refuel(suckItemsFacing)
+liblaggo.refuel(suckItemsFacing)
 
-naiveMove(suckItemsAt)
+liblaggo.naiveMove(suckItemsAt)
 do
     local totalToSmelt = 0
-    for slot = 1, NUM_SLOTS do
+    for slot = 1, liblaggo.NUM_SLOTS do
         turtle.select(slot)
-        doAnyDir("suck", suckItemsFacing)
+        liblaggo.doAnyDir("suck", suckItemsFacing)
         totalToSmelt = totalToSmelt + turtle.getItemCount(slot)
     end
 
@@ -38,25 +38,25 @@ do
         local toDropNow = math.min((furnace == numFurnaces) and numPerFurnace or (numPerFurnace + totalToSmelt % numFurnaces), 64)
         while toDropNow > 0 and totalToSmelt > 0 do
             local countBefore = turtle.getItemCount()
-            doWithContext("push items into furnace", function() return turtle.dropDown(math.min(toDropNow, countBefore)) end)
+            liblaggo.doWithContext("push items into furnace", function() return turtle.dropDown(math.min(toDropNow, countBefore)) end)
             local dropped = countBefore - turtle.getItemCount()
             if turtle.getItemCount() == 0 then
-                selectOffset(1)
+                liblaggo.selectOffset(1)
             end
 
             toDropNow = toDropNow - dropped
             totalToSmelt = totalToSmelt - dropped
         end
-        step(CARDINALS[furnacesDirection])
+        liblaggo.step(liblaggo.CARDINALS[furnacesDirection])
     end
 end
 
-if not isInventoryEmpty() then
-    naiveMove(suckItemsAt)
-    dump(suckItemsFacing)
+if not liblaggo.isInventoryEmpty() then
+    liblaggo.naiveMove(suckItemsAt)
+    liblaggo.dump(suckItemsFacing)
 end
 
 io.write("returning to home base at " .. startAt:tostring() .. "\n")
 
-naiveMove(startAt)
-face(startFacing)
+liblaggo.naiveMove(startAt)
+liblaggo.face(startFacing)

@@ -14,7 +14,7 @@ local dumpOutputsDirection = "north"
 
 ----------------------
 
-initPathing(startAt, startFacing)
+liblaggo.initPathing(startAt, startFacing)
 
 local stems = {
     "minecraft:pumpkin_stem",
@@ -39,24 +39,24 @@ local cornersAligned = {
         math.max(corners[1].z, corners[2].z)),
 }
 
-networkTrigger("stem", "stem", function()
-    refuel(refuelFacing, nil, 100 * 10)
+liblaggo.networkTrigger("stem", "stem", function()
+    liblaggo.refuel(refuelFacing, nil, 100 * 10)
 
     io.write("moving to start pos " .. cornersAligned[1]:tostring() .. "\n")
-    naiveMove(cornersAligned[1])
+    liblaggo.naiveMove(cornersAligned[1])
 
     -- Y, Z, X major order
     for y = cornersAligned[1].y, cornersAligned[2].y do
-        local zDir   = standing.z == cornersAligned[1].z and 1 or -1
+        local zDir   = liblaggo.standing.z == cornersAligned[1].z and 1 or -1
         local zStart = zDir == 1 and cornersAligned[1].z or cornersAligned[2].z
         local zEnd   = zDir == 1 and cornersAligned[2].z or cornersAligned[1].z
 
         for z = zStart, zEnd, zDir do
-            local xDir   = standing.x == cornersAligned[1].x and 1 or -1
+            local xDir   = liblaggo.standing.x == cornersAligned[1].x and 1 or -1
             local xStart = xDir == 1 and cornersAligned[1].x or cornersAligned[2].x
             local xEnd   = xDir == 1 and cornersAligned[2].x or cornersAligned[1].x
 
-            naiveMove(vector.new(standing.x, standing.y, z))
+            liblaggo.naiveMove(vector.new(liblaggo.standing.x, liblaggo.standing.y, z))
 
             local ok, data = turtle.inspectDown()
             if ok and isSkipRow(data) then
@@ -71,7 +71,7 @@ networkTrigger("stem", "stem", function()
 
             for x = xStart + xDir, xEnd, xDir do
                 local goal = vector.new(x, y, z)
-                naiveMove(goal)
+                liblaggo.naiveMove(goal)
 
                 ok, data = turtle.inspectDown()
 
@@ -87,9 +87,9 @@ networkTrigger("stem", "stem", function()
     end
 
     io.write("returning to home base at " .. startAt:tostring() .. "\n")
-    naiveMove(startAt)
-    dump(dumpOutputsDirection)
+    liblaggo.naiveMove(startAt)
+    liblaggo.dump(dumpOutputsDirection)
 
-    face(startFacing)
+    liblaggo.face(startFacing)
 end
 )
