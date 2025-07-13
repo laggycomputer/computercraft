@@ -23,8 +23,8 @@ function liblaggo.gpsAsVector()
 end
 
 function liblaggo.initPathing(startLocation, startFacing)
-    liblaggo.standing = startLocation and vector.new(startLocation.x, startLocation.y, startLocation.z) or
-    assert(liblaggo.gpsAsVector(), "cannot determine location and none passed!")
+    liblaggo.standing = startLocation and vector.new(startLocation.x, startLocation.y, startLocation.z) or liblaggo.gpsAsVector()
+    assert(liblaggo.standing, "cannot determine location and none passed!")
     liblaggo.facing = startFacing
 end
 
