@@ -39,7 +39,7 @@ local cornersAligned = {
         math.max(corners[1].z, corners[2].z)),
 }
 
-local app = liblaggo.networkApp()
+local app = liblaggo.headlessApp()
 
 app.on("trigger", function(req, res)
     res.send("ok")

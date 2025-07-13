@@ -33,7 +33,7 @@ require "liblaggo"
 -- assume we take lava from here too to refuel
 liblaggo.initPathing(startAt, startFacing)
 
-local app = liblaggo.networkApp()
+local app = liblaggo.headlessApp()
 
 app.on("trigger", function(req, res)
     res.send("ok")

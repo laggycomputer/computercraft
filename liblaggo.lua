@@ -337,3 +337,19 @@ function liblaggo.networkApp()
 
     return ret
 end
+
+function liblaggo.headlessApp()
+    local app = liblaggo.networkApp()
+
+    app.on("reload", function(req, res)
+        fs.delete("/computercraft")
+        fs.delete("/startup")
+        os.run({}, "/clone", "https://github.com/laggycomputer/computercraft")
+        local program = os.getComputerLabel()
+        fs.copy("/computercraft/" .. program, "/startup")
+        res.send("ok, restarting")
+        os.reboot()
+    end)
+
+    return app
+end
