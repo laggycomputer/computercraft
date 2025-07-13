@@ -16,7 +16,7 @@ end
 function liblaggo.gpsAsVector()
     local x, y, z = gps.locate()
     if x then
-        return vector:new(x, y, z)
+        return vector.new(x, y, z)
     else
         return nil
     end
