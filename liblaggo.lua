@@ -480,6 +480,10 @@ end
 function liblaggo.headlessApp()
     local app = liblaggo.networkApp()
 
+    app.on("ping", function(req, res)
+        res.send("hi! i'm " .. os.getComputerLabel() .. " (ID " .. os.getComputerID() .. ")")
+    end)
+
     app.on("reload", function(req, res)
         fs.delete("/computercraft")
         shell.run("/clone https://github.com/laggycomputer/computercraft")
