@@ -46,7 +46,7 @@ local app = liblaggo.headlessApp()
 app.on("trigger", function(req, res)
     res.send("ok")
 
-    liblaggo.refuel(refuelFacing, nil, 100 * 10)
+    liblaggo.refuel(refuelFacing, nil, 100 * 10, "west")
 
     io.write("moving to start pos " .. cornersAligned[1]:tostring() .. "\n")
     liblaggo.naiveMove(cornersAligned[1])
