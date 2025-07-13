@@ -1,4 +1,6 @@
-local filename = arg[1] or os.getComputerLabel()
+local args = {...}
+
+local filename = args[1] or os.getComputerLabel()
 
 os.setComputerLabel(filename)
 
