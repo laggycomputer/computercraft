@@ -194,7 +194,7 @@ function liblaggo.bruteMove(vecTo)
             return false, lastFail
         end
 
-        while canMove.x and displacement:length() ~= 0 do
+        while canMove.x and displacement.x ~= 0 do
             canMove.x, lastFail = liblaggo.step(vector.new(liblaggo.sgn(displacement.x), 0, 0))
             if canMove.x then
                 canMove.y = true
@@ -203,7 +203,7 @@ function liblaggo.bruteMove(vecTo)
             displacement = vecTo - liblaggo.standing
         end
 
-        while canMove.y and displacement:length() ~= 0 do
+        while canMove.y and displacement.y ~= 0 do
             canMove.y, lastFail = liblaggo.step(vector.new(0, liblaggo.sgn(displacement.y), 0))
             if canMove.y then
                 canMove.x = true
@@ -212,7 +212,7 @@ function liblaggo.bruteMove(vecTo)
             displacement = vecTo - liblaggo.standing
         end
 
-        while canMove.z and displacement:length() ~= 0 do
+        while canMove.z and displacement.z ~= 0 do
             canMove.z, lastFail = liblaggo.step(vector.new(0, 0, liblaggo.sgn(displacement.z)))
             if canMove.z then
                 canMove.x = true
