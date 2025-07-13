@@ -42,7 +42,7 @@ local function _tryFrontBack(initialLoc)
 
     for dir, vec in pairs(liblaggo.CARDINALS) do
         if vec:equals(delta) then
-            liblaggo.facing = dir
+            return dir
         end
     end
 end
@@ -53,14 +53,18 @@ function liblaggo.deduceFacing()
         return nil, "cannot deduce facing without gps"
     end
 
-    local firstTry = _tryFrontBack(loc)
-    if not firstTry then
-        turtle.turnLeft()
-        local secondTry = _tryFrontBack(loc)
-        if not secondTry then
-            return nil, "stuck in all horizontal directions"
-        end
+    local solved = _tryFrontBack(loc)
+    if solved then
+        return solved
     end
+
+    turtle.turnLeft()
+    solved = _tryFrontBack(loc)
+    if not solved then
+        return nil, "stuck in all horizontal directions"
+    end
+
+    return solved
 end
 
 function liblaggo.initPathing(startLocation, startFacing)
