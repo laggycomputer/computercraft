@@ -159,6 +159,50 @@ function liblaggo.naiveMove(vecTo)
     end
 end
 
+function liblaggo.sgn(x)
+    if x < 0 then
+        return -1
+    elseif x > 0 then
+        return 1
+    else
+        return 0
+    end
+end
+
+function liblaggo.bruteMove(vecTo)
+    local canMove = {
+        x = false,
+        y = false,
+        z = false,
+    }
+
+    local lastFail
+
+    local displacement = vecTo:subtract(liblaggo.standing)
+
+    while displacement:length() ~= 0 do
+        if not canMove.x and not canMove.y and not canMove.z then
+            return false, lastFail
+        end
+
+        while not canMove.x do
+            canMove.x, lastFail = liblaggo.step(vector.new(liblaggo.sgn(displacement.x), 0, 0))
+        end
+
+        while not canMove.y do
+            canMove.y, lastFail = liblaggo.step(vector.new(0, liblaggo.sgn(displacement.y), 0))
+        end
+
+        while not canMove.z do
+            canMove.z, lastFail = liblaggo.step(vector.new(0, 0, liblaggo.sgn(displacement.z)))
+        end
+
+        displacement = vecTo:subtract(liblaggo.standing):length()
+    end
+
+    return true
+end
+
 function liblaggo.getStanding()
     return vector.new(liblaggo.standing.x, liblaggo.standing.y, liblaggo.standing.z)
 end
@@ -195,7 +239,8 @@ function liblaggo.refuel(direction, toLevel, fuelValue, pushBuckets)
 
             local detail = turtle.getItemDetail()
             if detail and detail.name == "minecraft:bucket" then
-                liblaggo.doWithContext("return refueling bucket", function() return liblaggo.doAnyDir("drop", pushBuckets or direction) end)
+                liblaggo.doWithContext("return refueling bucket",
+                function() return liblaggo.doAnyDir("drop", pushBuckets or direction) end)
             end
 
             return true, nil
