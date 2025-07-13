@@ -89,7 +89,8 @@ app.on("trigger", function(req, res)
 
             if ok then
                 if data.name == "minecraft:lava_cauldron" then
-                    liblaggo.doWithContext("take lava at " .. liblaggo.getStanding():tostring(), function() return turtle.placeUp() end)
+                    liblaggo.doWithContext("take lava at " .. liblaggo.getStanding():tostring(),
+                        function() return turtle.placeUp() end)
                     liblaggo.selectOffset(1)
                 end
             end
@@ -106,7 +107,8 @@ app.on("trigger", function(req, res)
         if detail then
             if detail.name == "minecraft:lava_bucket" then
                 turtle.select(slot)
-                liblaggo.doWithContext("push out full buckets", function() return liblaggo.doAnyDir("drop", pushBucketsFacing) end)
+                liblaggo.doWithContext("push out full buckets",
+                    function() return liblaggo.doAnyDir("drop", pushBucketsFacing) end)
             end
             -- empty buckets can stay
         end
@@ -116,6 +118,34 @@ app.on("trigger", function(req, res)
 
     liblaggo.naiveMove(startAt)
     liblaggo.face(startFacing)
+end)
+
+app.on("resupply", function(req, res)
+    local standAt = req.params.standAt
+    local face = req.params.face
+    local count = math.min(req.params.count or 2, liblaggo.NUM_SLOTS)
+
+    res.send("omw")
+
+    -- clear inv
+    -- we know the only things we might have are empty buckets
+    liblaggo.naiveMove(takeBucketsAt)
+    liblaggo.clear(takeBucketsFacing)
+
+    -- take full buckets
+    liblaggo.naiveMove(pushBucketsAt)
+    for slot = 1, count do
+        turtle.select(slot)
+        liblaggo.doWithContext("suck full buckets to resupply", function() return liblaggo.doAnyDir("suck", pushBucketsFacing) end)
+    end
+
+    liblaggo.bruteMove(standAt)
+
+    -- take empty buckets
+    -- insert full buckets
+
+    -- go home
+    -- drop buckets
 end)
 
 app.run("lava", "lava")
