@@ -130,7 +130,7 @@ app.on("resupply", function(req, res)
     -- clear inv
     -- we know the only things we might have are empty buckets
     liblaggo.naiveMove(takeBucketsAt)
-    liblaggo.clear(takeBucketsFacing)
+    liblaggo.dump(takeBucketsFacing)
 
     -- take full buckets
     liblaggo.naiveMove(pushBucketsAt)
