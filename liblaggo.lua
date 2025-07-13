@@ -362,7 +362,12 @@ function liblaggo.networkApp()
 
                 local cb = routes[message.route]
                 if cb then
-                    routes[message.route](req, res)
+                    local ok, err = pcall(routes[message.route], req, res)
+                    if not ok then
+                        io.write("error in route " .. message.route .. ": " .. textutils.serialize(err) .. "\n")
+                    end
+                else
+                    io.write("warning: no such route " .. message.route .. "\n")
                 end
             end
         end
