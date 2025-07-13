@@ -340,6 +340,9 @@ function liblaggo.networkApp()
                 local req = {
                     sender = sender,
                     body = message.body,
+                    textual = function()
+                        return textutils.unserializeJSON(message.body)
+                    end,
                     json = function()
                         return textutils.unserializeJSON(message.body)
                     end,
@@ -348,6 +351,9 @@ function liblaggo.networkApp()
                 local res = {
                     send = function(payload)
                         rednet.send(sender, payload, protocolGot)
+                    end,
+                    textual = function(payload)
+                        rednet.send(sender, textutils.serializeJSON(payload), protocolGot)
                     end,
                     json = function(payload)
                         rednet.send(sender, textutils.serializeJSON(payload), protocolGot)

@@ -122,7 +122,7 @@ app.on("trigger", function(req, res)
 end)
 
 app.on("resupply", function(req, res)
-    local body = req.json()
+    local body = req.textual()
     local count = math.min(body.count or 2, liblaggo.NUM_SLOTS)
 
     res.send("omw")
