@@ -121,9 +121,8 @@ app.on("trigger", function(req, res)
 end)
 
 app.on("resupply", function(req, res)
-    local standAt = req.params.standAt
-    local face = req.params.face
-    local count = math.min(req.params.count or 2, liblaggo.NUM_SLOTS)
+    local params = req.json()
+    local count = math.min(params.count or 2, liblaggo.NUM_SLOTS)
 
     res.send("omw")
 
@@ -139,7 +138,7 @@ app.on("resupply", function(req, res)
         liblaggo.doWithContext("suck full buckets to resupply", function() return liblaggo.doAnyDir("suck", pushBucketsFacing) end)
     end
 
-    liblaggo.bruteMove(standAt)
+    liblaggo.bruteMove(vector.new(params.x, params.y, params.z))
 
     -- take empty buckets
     -- insert full buckets
