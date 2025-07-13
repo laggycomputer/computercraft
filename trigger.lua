@@ -25,7 +25,7 @@ assert(payload, "could not parse")
 
 assert(rednet.send(recipient, {
     route = route,
-    body = textutils.unserialize(payload),
+    body = payload,
 }, protocol), "message not sent")
 
 local sender, msg, protocol = rednet.receive(protocol, 10)
