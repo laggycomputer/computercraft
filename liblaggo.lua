@@ -23,26 +23,27 @@ function liblaggo.gpsAsVector()
 end
 
 local function _tryFrontBack(initialLoc)
+    local delta
+
     if turtle.forward() then
-        local delta = liblaggo.gpsAsVector() - initialLoc
+        delta = liblaggo.gpsAsVector() - initialLoc
         liblaggo.standing = liblaggo.standing + delta
-
-        for dir, vec in liblaggo.CARDINALS do
-            if vec:equals(delta) then
-                return dir
-            end
-        end
     elseif turtle.back() then
-        local delta = liblaggo.gpsAsVector() - initialLoc
+        delta = liblaggo.gpsAsVector() - initialLoc
         liblaggo.standing = liblaggo.standing + delta
 
-        for dir, vec in liblaggo.CARDINALS do
-            if vec:equals(delta:unm()) then
-                return dir
-            end
-        end
-    else
+        -- because this is backwards
+        delta = delta:unm()
+    end
+
+    if not delta then
         return nil
+    end
+
+    for dir, vec in pairs(liblaggo.CARDINALS) do
+        if vec:equals(delta) then
+            liblaggo.facing = dir
+        end
     end
 end
 
