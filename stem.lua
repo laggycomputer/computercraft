@@ -39,7 +39,11 @@ local cornersAligned = {
         math.max(corners[1].z, corners[2].z)),
 }
 
-liblaggo.networkTrigger("stem", "stem", function()
+local app = liblaggo.networkApp()
+
+app.on("start", function(req, res)
+    res.send("ok")
+
     liblaggo.refuel(refuelFacing, nil, 100 * 10)
 
     io.write("moving to start pos " .. cornersAligned[1]:tostring() .. "\n")
@@ -93,3 +97,5 @@ liblaggo.networkTrigger("stem", "stem", function()
     liblaggo.face(startFacing)
 end
 )
+
+app.run("farm", "pumpkins")

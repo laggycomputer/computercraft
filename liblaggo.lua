@@ -244,7 +244,7 @@ function liblaggo.refuel(direction, toLevel, fuelValue, pushBuckets)
             local detail = turtle.getItemDetail()
             if detail and detail.name == "minecraft:bucket" then
                 liblaggo.doWithContext("return refueling bucket",
-                function() return liblaggo.doAnyDir("drop", pushBuckets or direction) end)
+                    function() return liblaggo.doAnyDir("drop", pushBuckets or direction) end)
             end
 
             return true, nil
@@ -287,18 +287,53 @@ function liblaggo.selectOffset(off)
     turtle.select(next)
 end
 
-function liblaggo.networkTrigger(protocol, hostname, cb)
-    peripheral.find("modem", rednet.open)
-    rednet.host(protocol, hostname)
+-- requests have {route, params}
 
-    io.write("listening as " .. hostname .. " on protocol " .. protocol .. "\n")
+function liblaggo.networkApp()
+    local routes = {}
 
-    while true do
-        local event, sender, message, protocol_got = os.pullEvent("rednet_message")
+    local ret = {}
 
-        if protocol == protocol_got then
-            rednet.send(sender, "ack", protocol)
-            cb()
+    -- ret.protocol = nil
+    -- ret.hostname = nil
+
+    ret.halt = false
+
+    ret.on = function(route, cb)
+        routes[route] = cb
+    end
+
+    ret.run = function(protocol, hostname)
+        ret.protocol = protocol
+        ret.hostname = hostname
+
+        peripheral.find("modem", rednet.open)
+        rednet.host(protocol, hostname)
+
+        io.write("listening as " .. hostname .. " on protocol " .. protocol .. "\n")
+
+        while not ret.halt do
+            local event, sender, message, protocolGot = os.pullEvent("rednet_message")
+            if protocol == protocolGot then
+                local req = {
+                    sender = sender,
+                    params = message.params,
+                    app = ret,
+                }
+                local res = {
+                    send = function(payload)
+                        rednet.send(sender, payload, protocolGot)
+                    end
+                }
+
+                routes[message.route](req, res)
+            end
         end
     end
+
+    ret.stop = function()
+        ret.halt = true
+    end
+
+    return ret
 end

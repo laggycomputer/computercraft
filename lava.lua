@@ -33,7 +33,11 @@ require "liblaggo"
 -- assume we take lava from here too to refuel
 liblaggo.initPathing(startAt, startFacing)
 
-liblaggo.networkTrigger("lava", "lava", function()
+local app = liblaggo.networkApp()
+
+app.on("collect", function(req, res)
+    res.send("ok")
+
     -- steal lava from output, push buckets back to input
     liblaggo.refuel(pushBucketsFacing, nil, 100 * 10, takeBucketsFacing)
 
@@ -112,3 +116,5 @@ liblaggo.networkTrigger("lava", "lava", function()
     liblaggo.naiveMove(startAt)
     liblaggo.face(startFacing)
 end)
+
+app.run("lava", "lava")
