@@ -35,7 +35,7 @@ liblaggo.initPathing(startAt, startFacing)
 
 local app = liblaggo.networkApp()
 
-app.on("collect", function(req, res)
+app.on("trigger", function(req, res)
     res.send("ok")
 
     -- steal lava from output, push buckets back to input

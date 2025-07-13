@@ -41,7 +41,7 @@ local cornersAligned = {
 
 local app = liblaggo.networkApp()
 
-app.on("start", function(req, res)
+app.on("trigger", function(req, res)
     res.send("ok")
 
     liblaggo.refuel(refuelFacing, nil, 100 * 10)
