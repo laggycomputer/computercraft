@@ -326,11 +326,17 @@ function liblaggo.networkApp()
                 local req = {
                     sender = sender,
                     params = message.params,
+                    json = function()
+                        return textutils.unserializeJSON(message.params)
+                    end,
                     app = ret,
                 }
                 local res = {
                     send = function(payload)
                         rednet.send(sender, payload, protocolGot)
+                    end,
+                    json = function(payload)
+                        rednet.send(sender, textutils.serializeJSON(payload), protocolGot)
                     end
                 }
 
