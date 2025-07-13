@@ -179,9 +179,9 @@ end
 
 function liblaggo.bruteMove(vecTo)
     local canMove = {
-        x = false,
-        y = false,
-        z = false,
+        x = true,
+        y = true,
+        z = true,
     }
 
     local lastFail
