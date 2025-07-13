@@ -112,9 +112,9 @@ liblaggo.NUM_SLOTS = 16
 
 function liblaggo.isTableEmpty(obj)
     for _, _ in pairs(obj) do
-        return true
+        return false
     end
-    return false
+    return true
 end
 
 function liblaggo.face(facingTo)
