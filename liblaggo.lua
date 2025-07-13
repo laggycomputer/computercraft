@@ -22,11 +22,53 @@ function liblaggo.gpsAsVector()
     end
 end
 
+local function _tryFrontBack(initialLoc)
+    if turtle.forward() then
+        local delta = liblaggo.gpsAsVector() - initialLoc
+        liblaggo.standing = liblaggo.standing + delta
+
+        for dir, vec in liblaggo.CARDINALS do
+            if vec:equals(delta) then
+                return dir
+            end
+        end
+    elseif turtle.back() then
+        local delta = liblaggo.gpsAsVector() - initialLoc
+        liblaggo.standing = liblaggo.standing + delta
+
+        for dir, vec in liblaggo.CARDINALS do
+            if vec:equals(delta:unm()) then
+                return dir
+            end
+        end
+    else
+        return nil
+    end
+end
+
+function liblaggo.deduceFacing()
+    local loc = liblaggo.gpsAsVector()
+    if not loc then
+        return nil, "cannot deduce facing without gps"
+    end
+
+    local firstTry = _tryFrontBack(loc)
+    if not firstTry then
+        turtle.turnLeft()
+        local secondTry = _tryFrontBack(loc)
+        if not secondTry then
+            return nil, "stuck in all horizontal directions"
+        end
+    end
+end
+
 function liblaggo.initPathing(startLocation, startFacing)
     liblaggo.standing = startLocation and vector.new(startLocation.x, startLocation.y, startLocation.z) or
         liblaggo.gpsAsVector()
     assert(liblaggo.standing, "cannot determine location and none passed!")
-    liblaggo.facing = startFacing
+
+    liblaggo.facing = startFacing or liblaggo.deduceFacing()
+    assert(liblaggo.facing, "cannot determine facing and none passed")
 end
 
 liblaggo.CARDINALS = {
@@ -307,6 +349,22 @@ function liblaggo.selectOffset(off)
     end
 
     turtle.select(next)
+end
+
+function liblaggo.facingToPeripheral(direction)
+    if direction == "up" then
+        return "top"
+    elseif direction == "down" then
+        return "bottom"
+    elseif direction == liblaggo.facing then
+        return "front"
+    elseif direction == liblaggo.FACE_LEFT[liblaggo.facing] then
+        return "left"
+    elseif direction == liblaggo.FACE_RIGHT[liblaggo.facing] then
+        return "right"
+    else
+        return "back"
+    end
 end
 
 -- requests have {route, body}
