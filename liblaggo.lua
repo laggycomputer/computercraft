@@ -212,6 +212,10 @@ function liblaggo.getFacing()
 end
 
 function liblaggo.refuel(direction, toLevel, fuelValue, pushBuckets)
+    if turtle.getFuelLimit() == "unlimited" then
+        return
+    end
+
     local toLevel = toLevel or turtle.getFuelLimit()
 
     -- assume charcoal
