@@ -110,6 +110,13 @@ liblaggo.INVERT = {
 
 liblaggo.NUM_SLOTS = 16
 
+function liblaggo.isTableEmpty(obj)
+    for _, _ in pairs(obj) do
+        return true
+    end
+    return false
+end
+
 function liblaggo.face(facingTo)
     if liblaggo.facing == "up" or liblaggo.facing == "down" then
         return
@@ -486,6 +493,38 @@ function liblaggo.headlessApp()
     end)
 
     return app
+end
+
+function liblaggo.fetch(protocol, host, route, payload)
+    if liblaggo.isTableEmpty(peripheral.find("modem", rednet.open)) then
+        return false, "no modem"
+    end
+
+    local recipient = rednet.lookup(protocol, host)
+
+    if not recipient then
+        return false, "no host found"
+    end
+
+    payloadSer = textUtils.serialize(payload)
+
+    if not payloadSer then
+        return false, "could not serialize"
+    end
+
+    if not rednet.send(recipient, {
+            route = route,
+            body = payloadSer,
+        }, protocol) then
+        return false, "mesage not sent"
+    end
+
+    local sender, msg, protocol = rednet.receive(protocol, 5)
+    if not sender then
+        return false, "no ack"
+    end
+
+    return true, sender, msg
 end
 
 return liblaggo

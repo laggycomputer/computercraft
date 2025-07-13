@@ -9,6 +9,7 @@ local startAt = vector.new(-224, 78, 8)
 local startFacing = "east"
 
 local refuelFacing = "up"
+local dumpBucketsFacing = "west"
 
 local dumpOutputsDirection = "north"
 
@@ -46,7 +47,20 @@ local app = liblaggo.headlessApp()
 app.on("trigger", function(req, res)
     res.send("ok")
 
-    liblaggo.refuel(refuelFacing, nil, 100 * 10, "west")
+    liblaggo.refuel(refuelFacing, nil, 100 * 10, dumpBucketsFacing)
+    if liblaggo.isTableEmpty(peripheral.wrap(refuelFacing).list()) then
+        local takeAt = startAt + liblaggo.CARDINALS[dumpBucketsFacing]
+        local ok = liblaggo.fetch("lava", "lava", "resupply",
+            {
+                insertAt = { x = startAt.x, y = startAt.y + 1, z = startAt.z },
+                insertFacing = "down",
+                takeAt = { x = takeAt.x, y = takeAt.y + 1, z = takeAt.z },
+                takeFacing = "down",
+            })
+        if not ok then
+            io.write("warning: no response to refuel request\n")
+        end
+    end
 
     io.write("moving to start pos " .. cornersAligned[1]:tostring() .. "\n")
     liblaggo.naiveMove(cornersAligned[1])
