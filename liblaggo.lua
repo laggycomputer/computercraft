@@ -347,7 +347,7 @@ function liblaggo.headlessApp()
         local program = os.getComputerLabel()
 
         local fp = fs.open("/startup", "w+")
-        fp.write('dofile("/computercraft/' .. program .. '")')
+        fp.write('shell.run("/computercraft/' .. program .. '")')
 
         res.send("ok, restarting")
         os.reboot()
