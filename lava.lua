@@ -32,7 +32,7 @@ local liblaggo = require("liblaggo")
 
 -- assume we take lava from here too to refuel
 liblaggo.initPathing(nil, startFacing)
-liblaggo.doWithContext(function() return liblaggo.bruteMove(startAt) end, "move to intended start position")
+liblaggo.doWithContext("move to intended start position", function() return liblaggo.bruteMove(startAt) end)
 
 local app = liblaggo.headlessApp()
 
