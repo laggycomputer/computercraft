@@ -23,7 +23,8 @@ function liblaggo.gpsAsVector()
 end
 
 function liblaggo.initPathing(startLocation, startFacing)
-    liblaggo.standing = startLocation and vector.new(startLocation.x, startLocation.y, startLocation.z) or liblaggo.gpsAsVector()
+    liblaggo.standing = startLocation and vector.new(startLocation.x, startLocation.y, startLocation.z) or
+    liblaggo.gpsAsVector()
     assert(liblaggo.standing, "cannot determine location and none passed!")
     liblaggo.facing = startFacing
 end
@@ -340,7 +341,10 @@ function liblaggo.networkApp()
                     end
                 }
 
-                routes[message.route](req, res)
+                local cb = routes[message.route]
+                if cb then
+                    routes[message.route](req, res)
+                end
             end
         end
     end
