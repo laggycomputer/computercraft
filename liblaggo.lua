@@ -14,7 +14,8 @@ function liblaggo.doWithContext(context, fn)
 end
 
 function liblaggo.initPathing(startLocation, startFacing)
-    liblaggo.standing = vector.new(startLocation.x, startLocation.y, startLocation.z)
+    liblaggo.standing = startLocation and vector.new(startLocation.x, startLocation.y, startLocation.z) or
+    assert(gps.locate(), "cannot determine location and none passed!")
     liblaggo.facing = startFacing
 end
 
