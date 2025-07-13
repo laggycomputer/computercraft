@@ -125,6 +125,24 @@ app.on("resupply", function(req, res)
     local body = req.textual()
     local count = math.min(body.count or 2, liblaggo.NUM_SLOTS)
 
+    local insertAt = liblaggo.parseBlockPos(body.insertAt)
+    if not insertAt then
+        return res.send("bad insertAt")
+    end
+
+    if not liblaggo.CARDINALS[body.insertFacing] then
+        return res.send("bad insertFacing")
+    end
+
+    local takeAt = liblaggo.parseBlockPos(body.takeAt)
+    if not takeAt then
+        return res.send("bad takeAt")
+    end
+
+    if not liblaggo.CARDINALS[body.takeFacing] then
+        return res.send("bad takeFacing")
+    end
+
     res.send("omw")
 
     -- clear inv
@@ -136,16 +154,29 @@ app.on("resupply", function(req, res)
     liblaggo.naiveMove(pushBucketsAt)
     for slot = 1, count do
         turtle.select(slot)
-        liblaggo.doWithContext("suck full buckets to resupply", function() return liblaggo.doAnyDir("suck", pushBucketsFacing) end)
+        liblaggo.doWithContext("suck full buckets to resupply",
+        function() return liblaggo.doAnyDir("suck", pushBucketsFacing) end)
     end
 
-    liblaggo.bruteMove(vector.new(body.x, body.y, body.z))
+    liblaggo.bruteMove(insertAt)
+
+    -- insert full buckets
+    liblaggo.dump(body.insertFacing)
 
     -- take empty buckets
-    -- insert full buckets
+    liblaggo.bruteMove(takeAt)
+
+    turtle.select(1)
+    -- assume this container contains buckets and we can fit them all
+    while liblaggo.doAnyDir("suck", body.takeFacing) do
+        -- nothing
+    end
 
     -- go home
+    liblaggo.bruteMove(takeBucketsAt)
+
     -- drop buckets
+    liblaggo.dump(takeBucketsFacing)
 end)
 
 app.run("lava", "lava")

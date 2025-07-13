@@ -99,6 +99,15 @@ liblaggo.FACE_LEFT = {
     south = "east",
 }
 
+liblaggo.INVERT = {
+    east = "west",
+    west = "east",
+    north = "south",
+    south = "north",
+    up = "down",
+    down = "up"
+}
+
 liblaggo.NUM_SLOTS = 16
 
 function liblaggo.face(facingTo)
@@ -370,6 +379,24 @@ function liblaggo.facingToPeripheral(direction)
     else
         return "back"
     end
+end
+
+function liblaggo.parseBlockPos(obj)
+    if not obj then
+        return nil
+    end
+
+    if type(obj.x) ~= "number" or math.floor(obj.x) ~= obj.x then
+        return nil
+    end
+    if type(obj.y) ~= "number" or math.floor(obj.y) ~= obj.y then
+        return nil
+    end
+    if type(obj.z) ~= "number" or math.floor(obj.z) ~= obj.z then
+        return nil
+    end
+
+    return vector.new(obj.x, obj.y, obj.z)
 end
 
 -- requests have {route, body}
