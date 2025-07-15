@@ -520,7 +520,7 @@ function liblaggo.fetch(protocol, host, route, payload)
             route = route,
             body = payloadSer,
         }, protocol) then
-        return false, "mesage not sent"
+        return false, "message not sent"
     end
 
     local sender, msg, protocol = rednet.receive(protocol, 5)
