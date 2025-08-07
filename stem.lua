@@ -8,7 +8,7 @@ local corners = {
 local startAt = vector.new(-224, 78, 8)
 local startFacing = "east"
 
-local refuelFacing = "up"
+local refuelFacing = "top"
 local dumpBucketsFacing = "west"
 
 local dumpOutputsDirection = "north"
